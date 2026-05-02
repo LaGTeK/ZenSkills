@@ -32,7 +32,22 @@ class ZenSkillsEXP: ZenConfigBase
 	
 	override bool ReadJson(string path, out string err)
 	{
-		return JsonFileLoader<ZenSkillsEXP>.LoadFile(path, this, err);
+		if (!FileExist(path))
+		{
+			err = string.Format("File \"%1\" does not exist, check the provided path", path);
+			return false;
+		}
+		FileHandle handle = OpenFile(path, FileMode.READ);
+		if (handle == 0)
+		{
+			err = string.Format("Cannot open file \"%1\" for reading", path);
+			return false;
+		}
+		string fileContent;
+		ReadFile(handle, fileContent, 100000000);
+		CloseFile(handle);
+		JsonSerializer ser = new JsonSerializer();
+		return ser.ReadFromString(this, fileContent, err);
 	}
 
 	override bool WriteJson(string path, out string err)
@@ -86,6 +101,8 @@ class ZenSkillsEXP: ZenConfigBase
 		survival.ExpDefs.Insert("HandDrillKitSuccess", new ZenSkillsEXPDef(25));
 		survival.ExpDefs.Insert("ActionTestBloodSelf", new ZenSkillsEXPDef(25));
 		survival.ExpDefs.Insert("Cooking", new ZenSkillsEXPDef(5));
+		// KotH (P:\KotH): koth_event WinEvent -> AddEXP_Action(..., "MDZ_KotH_Win", ...)
+		survival.ExpDefs.Insert("MDZ_KotH_Win", new ZenSkillsEXPDef(200, true));
 		ExpDefs.Insert("survival", survival);
 
 		//------------------------------------------------------------------------------------------------
@@ -98,6 +115,12 @@ class ZenSkillsEXP: ZenConfigBase
 		crafting.ExpDefs.Insert("ActionRepairPart", new ZenSkillsEXPDef(10));
 		crafting.ExpDefs.Insert("ActionBuildShelter", new ZenSkillsEXPDef(25));
 		crafting.ExpDefs.Insert("ActionDismantlePart", new ZenSkillsEXPDef(10));
+		// RA / MDZ_RA: ActionRewardsHook (continuous) or explicit AddEXP_Action (place hologram)
+		crafting.ExpDefs.Insert("ActionRepairBase", new ZenSkillsEXPDef(10));
+		crafting.ExpDefs.Insert("ActionUpgradeBase", new ZenSkillsEXPDef(10));
+		crafting.ExpDefs.Insert("ActionPlaceHologram", new ZenSkillsEXPDef(25));
+		crafting.ExpDefs.Insert("ActionDismantleBase", new ZenSkillsEXPDef(10));
+		crafting.ExpDefs.Insert("ActionDismantleIntoBox", new ZenSkillsEXPDef(10));
 		ExpDefs.Insert("crafting", crafting);
 
 		//------------------------------------------------------------------------------------------------
