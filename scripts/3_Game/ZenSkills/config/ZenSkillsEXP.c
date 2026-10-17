@@ -86,6 +86,8 @@ class ZenSkillsEXP: ZenConfigBase
 		survival.ExpDefs.Insert("HandDrillKitSuccess", new ZenSkillsEXPDef(25));
 		survival.ExpDefs.Insert("ActionTestBloodSelf", new ZenSkillsEXPDef(25));
 		survival.ExpDefs.Insert("Cooking", new ZenSkillsEXPDef(5));
+		// KotH (P:\koth): koth_event WinEvent -> AddEXP_Action(..., "KOTH_Capture", ...)
+		survival.ExpDefs.Insert("KOTH_Capture", new ZenSkillsEXPDef(200, true));
 		ExpDefs.Insert("survival", survival);
 
 		//------------------------------------------------------------------------------------------------

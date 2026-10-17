@@ -11,13 +11,13 @@ class ZenMatSnap
 
 modded class Construction
 {
-    override void BuildPartServer(notnull Man player, string part_name, int action_id)
+    override void BuildPartServerEx(Man player, string part_name, int action_id)
     {
         // Snapshot BEFORE vanilla consumes
         array<ref ZenMatSnap> snaps;
         ZenCaptureMaterialSnapshot(part_name, snaps);
 
-        super.BuildPartServer(player, part_name, action_id);
+        super.BuildPartServerEx(player, part_name, action_id);
 
         PlayerBase pb = PlayerBase.Cast(player);
         if (!pb) 
